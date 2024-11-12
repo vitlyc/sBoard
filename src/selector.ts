@@ -1,2 +1,4 @@
 import { RootState } from './types'
-export const currentStrokeSelector = (state: RootState) => state.currentStroke
+
+export const rect1Selector = (state: RootState) => state.rect1
+export const rect2Selector = (state: RootState) => state.rect2

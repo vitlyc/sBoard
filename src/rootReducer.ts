@@ -1,62 +1,31 @@
-import {
-  Action,
-  UPDATE_STROKE,
-  BEGIN_STROKE,
-  END_STROKE,
-  SET_STROKE_COLOR,
-} from './actions'
+import { Action, UPDATE_RECT_POSITION } from './actions'
 import { RootState } from './types'
 
 const initialState: RootState = {
-  currentStroke: { points: [], color: '#000' },
-  strokes: [],
+  rect1: {
+    position: { x: 150, y: 150 },
+    size: { width: 80, height: 60 },
+  },
+  rect2: {
+    position: { x: 400, y: 300 },
+    size: { width: 100, height: 80 },
+  },
 }
 
 export const rootReducer = (
   state: RootState = initialState,
   action: Action
-) => {
+): RootState => {
   switch (action.type) {
-    case BEGIN_STROKE: {
+    case UPDATE_RECT_POSITION:
+      const { rectId, position } = action.payload
       return {
         ...state,
-        currentStroke: {
-          ...state.currentStroke,
-          points: [action.payload],
+        [rectId]: {
+          ...state[rectId],
+          position,
         },
       }
-    }
-    case UPDATE_STROKE: {
-      return {
-        ...state,
-        currentStroke: {
-          ...state.currentStroke,
-          points: [...state.currentStroke.points, action.payload],
-        },
-      }
-    }
-    case END_STROKE: {
-      if (!state.currentStroke.points.length) {
-        return state
-      }
-      const newState = {
-        ...state,
-        historyIndex: 0,
-        currentStroke: { ...state.currentStroke, points: [] },
-        strokes: [...state.strokes, state.currentStroke],
-      }
-      return newState
-    }
-    case SET_STROKE_COLOR: {
-      return {
-        ...state,
-        currentStroke: {
-          ...state.currentStroke,
-          ...{ color: action.payload },
-        },
-      }
-    }
-
     default:
       return state
   }

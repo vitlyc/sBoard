@@ -16,10 +16,9 @@ code {
 
 canvas {
   transform: translate3d(-50%, 0, 0);
-  cursor: url(./icons/pencil.png) 0 34, auto;
   margin: 100px 50%;
 }
-.colors {
+/* .colors {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -40,4 +39,4 @@ canvas {
   left: 50%;
   transform: translate3d(-50%, 0, 0);
   z-index: 10;
-}
+} */

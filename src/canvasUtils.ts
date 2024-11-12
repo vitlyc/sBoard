@@ -1,30 +1,16 @@
-import { Point } from './types'
+import { Rect } from './types'
 
-export const drawStroke = (
-  context: CanvasRenderingContext2D,
-  points: Point[],
-  color: string
-) => {
-  if (!points.length) {
-    return
-  }
-  context.strokeStyle = color
-  context.beginPath()
-  context.moveTo(points[0].x, points[0].y)
-  points.forEach((point) => {
-    context.lineTo(point.x, point.y)
-    context.stroke()
+export const drawRects = (context: CanvasRenderingContext2D, rects: Rect[]) => {
+  context.fillStyle = '#ADD8E6'
+  rects.forEach((rect) => {
+    if (!rect) return
+    context.fillRect(
+      rect.position.x,
+      rect.position.y,
+      rect.size.width,
+      rect.size.height
+    )
   })
-  context.closePath()
-}
-
-export const clearCanvas = (canvas: HTMLCanvasElement) => {
-  const context = canvas.getContext('2d')
-  if (!context) {
-    return
-  }
-  context.fillStyle = 'white'
-  context.fillRect(0, 0, canvas.width, canvas.height)
 }
 
 export const setCanvasSize = (
@@ -37,4 +23,12 @@ export const setCanvasSize = (
   canvas.style.width = `${width}px`
   canvas.style.height = `${height}px`
   canvas.getContext('2d')?.scale(2, 2)
+}
+export const clearCanvas = (canvas: HTMLCanvasElement) => {
+  const context = canvas.getContext('2d')
+  if (!context) {
+    return
+  }
+  context.fillStyle = 'white'
+  context.fillRect(0, 0, canvas.width, canvas.height)
 }
