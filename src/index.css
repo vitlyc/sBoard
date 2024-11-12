@@ -15,10 +15,7 @@ code {
 }
 
 canvas {
-  transform: translate3d(-50%, 0, 0);
-  margin: 100px 50%;
-  margin-right: -10%;
-  margin-top: 2%;
+  margin: 50px auto;
 }
 
 .rectangle-panels {
@@ -29,9 +26,12 @@ canvas {
   flex-direction: column;
   top: 40px;
   left: 5%;
-  /* transform: translate3d(-50%, 0, 0); */
   z-index: 10;
 }
 .rectangle-panel {
   padding: 10px;
+}
+.window {
+  display: flex;
+  flex-direction: column;
 }
