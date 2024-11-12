@@ -103,13 +103,11 @@ function App() {
     let newX = mouseX - offset.x
     let newY = mouseY - offset.y
 
-    // Ограничиваем перемещение прямоугольника границами Canvas
     newX = Math.max(0, Math.min(newX, WIDTH - currentRect.size.width))
     newY = Math.max(0, Math.min(newY, HEIGHT - currentRect.size.height))
 
     const newRect = { ...currentRect, position: { x: newX, y: newY } }
 
-    // Проверяем пересечение прямоугольников
     if (areRectanglesOverlapping(newRect, otherRect)) {
       return
     }

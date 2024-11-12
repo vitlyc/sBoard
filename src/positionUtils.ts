@@ -11,11 +11,9 @@ export const getRelativePosition = (rect1: Rect, rect2: Rect): string => {
   const left2 = rect2.position.x
   const right2 = rect2.position.x + rect2.size.width
 
-  // Сначала проверяем горизонтальное положение
   if (right1 < left2) return 'rect1 левее rect2'
   if (right2 < left1) return 'rect2 левее rect1'
 
-  // Затем проверяем вертикальное положение
   if (bottom1 < top2) return 'rect1 выше rect2'
   if (bottom2 < top1) return 'rect2 выше rect1'
 
