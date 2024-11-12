@@ -1,10 +1,6 @@
 import { Point, Rect } from './types'
 import { getRelativePosition } from './positionUtils'
 
-/**
- * Функция для построения ломаной линии, соединяющей два прямоугольника
- * под углом 90 градусов относительно их границ.
- */
 export const getConnectionLine = (rect1: Rect, rect2: Rect): Point[] => {
   const relativePosition = getRelativePosition(rect1, rect2)
 
@@ -36,7 +32,6 @@ export const getConnectionLine = (rect1: Rect, rect2: Rect): Point[] => {
 
   switch (relativePosition) {
     case 'rect1 выше rect2':
-      // Соединяем нижнюю грань rect1 с верхней гранью rect2 под углом 90 градусов
       startPoint = getRectConnectionPoint(rect1, 'bottom')
       endPoint = getRectConnectionPoint(rect2, 'top')
       points.push(
@@ -81,7 +76,6 @@ export const getConnectionLine = (rect1: Rect, rect2: Rect): Point[] => {
       break
 
     default:
-      // Если прямоугольники перекрываются, строим линию с поворотами на 90 градусов
       startPoint = getRectConnectionPoint(rect1, 'right')
       endPoint = getRectConnectionPoint(rect2, 'left')
       points.push(

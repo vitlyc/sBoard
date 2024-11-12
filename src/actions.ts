@@ -19,8 +19,6 @@ export type UpdateRectDimensionsAction = {
     height: number
   }
 }
-
-// Экшен для обновления позиции прямоугольника
 export const updateRectPosition = (
   rectId: 'rect1' | 'rect2',
   position: { x: number; y: number }
@@ -29,7 +27,6 @@ export const updateRectPosition = (
   payload: { rectId, position },
 })
 
-// Экшен для обновления размеров и положения прямоугольника
 export const updateRectDimensions = (
   rectId: 'rect1' | 'rect2',
   x: number,

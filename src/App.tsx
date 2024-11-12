@@ -45,10 +45,8 @@ function App() {
 
     clearCanvas(canvasRef.current!)
 
-    // Отрисовка прямоугольников
     drawRects(context, [rect1, rect2])
 
-    // Построение соединительной линии между прямоугольниками
     const linePoints = getConnectionLine(rect1, rect2)
     drawLine(context, linePoints)
   }, [rect1, rect2])
@@ -62,8 +60,11 @@ function App() {
     context.stroke()
   }
 
-  // Проверка, находится ли точка внутри прямоугольника
-  const isPointInRect = (x: number, y: number, rect: any) => {
+  const isPointInRect = (
+    x: number,
+    y: number,
+    rect: { position: Point; size: { width: number; height: number } }
+  ): boolean => {
     return (
       x >= rect.position.x &&
       x <= rect.position.x + rect.size.width &&
@@ -72,17 +73,20 @@ function App() {
     )
   }
 
-  // Проверка на пересечение прямоугольников
   const areRectanglesOverlapping = (rect1: any, rect2: any): boolean => {
+    const rect1Right = rect1.position.x + rect1.size.width
+    const rect1Bottom = rect1.position.y + rect1.size.height
+    const rect2Right = rect2.position.x + rect2.size.width
+    const rect2Bottom = rect2.position.y + rect2.size.height
+
     return !(
-      rect1.position.x + rect1.size.width < rect2.position.x ||
-      rect1.position.x > rect2.position.x + rect2.size.width ||
-      rect1.position.y + rect1.size.height < rect2.position.y ||
-      rect1.position.y > rect2.position.y + rect2.size.height
+      rect1Right < rect2.position.x ||
+      rect1.position.x > rect2Right ||
+      rect1Bottom < rect2.position.y ||
+      rect1.position.y > rect2Bottom
     )
   }
 
-  // Обработчик перемещения мыши
   const handleMouseMove = (event: React.MouseEvent) => {
     if (!isDragging || !draggingRect) return
 
@@ -93,42 +97,26 @@ function App() {
     const mouseX = event.clientX - rect.left
     const mouseY = event.clientY - rect.top
 
-    // Определяем текущий прямоугольник и второй прямоугольник
     const currentRect = draggingRect === 'rect1' ? rect1 : rect2
     const otherRect = draggingRect === 'rect1' ? rect2 : rect1
-    const rectWidth = currentRect.size.width
-    const rectHeight = currentRect.size.height
 
-    // Ограничиваем движение по границам холста
     let newX = mouseX - offset.x
     let newY = mouseY - offset.y
 
-    // Проверка выхода за границы холста
-    if (newX < 0) newX = 0
-    if (newY < 0) newY = 0
-    if (newX + rectWidth > WIDTH) newX = WIDTH - rectWidth
-    if (newY + rectHeight > HEIGHT) newY = HEIGHT - rectHeight
+    // Ограничиваем перемещение прямоугольника границами Canvas
+    newX = Math.max(0, Math.min(newX, WIDTH - currentRect.size.width))
+    newY = Math.max(0, Math.min(newY, HEIGHT - currentRect.size.height))
 
-    // Проверка пересечения с другим прямоугольником
-    const newRect = {
-      ...currentRect,
-      position: { x: newX, y: newY },
-    }
+    const newRect = { ...currentRect, position: { x: newX, y: newY } }
 
+    // Проверяем пересечение прямоугольников
     if (areRectanglesOverlapping(newRect, otherRect)) {
-      return // Если прямоугольники пересекаются, не обновляем положение
+      return
     }
 
-    // Обновляем положение прямоугольника в состоянии Redux
-    dispatch(
-      updateRectPosition(draggingRect, {
-        x: newX,
-        y: newY,
-      })
-    )
+    dispatch(updateRectPosition(draggingRect, { x: newX, y: newY }))
   }
 
-  // Обработчик нажатия мыши
   const handleMouseDown = (event: React.MouseEvent) => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -148,7 +136,6 @@ function App() {
     }
   }
 
-  // Обработчик отпускания мыши
   const handleMouseUp = () => {
     setIsDragging(false)
     setDraggingRect(null)

@@ -8,7 +8,6 @@ const RectanglePanel: React.FC = () => {
   const rect1 = useSelector(rect1Selector)
   const rect2 = useSelector(rect2Selector)
 
-  // Обработчик изменения значений для прямоугольников
   const handleInputChange = (
     rectId: 'rect1' | 'rect2',
     field: 'x' | 'y' | 'width' | 'height',
@@ -33,49 +32,36 @@ const RectanglePanel: React.FC = () => {
     )
   }
 
+  const renderInputField = (
+    label: string,
+    value: number,
+    onChange: (value: number) => void
+  ) => (
+    <div>
+      <label>{label}:</label>
+      <input
+        type="number"
+        value={value}
+        onChange={(e) => onChange(parseInt(e.target.value, 10))}
+      />
+    </div>
+  )
+
   const renderInputFields = (rectId: 'rect1' | 'rect2', rect: any) => (
     <div className="rectangle-panel">
       <h3>{rectId.toUpperCase()}</h3>
-      <div>
-        <label>X:</label>
-        <input
-          type="number"
-          value={rect.position.x}
-          onChange={(e) =>
-            handleInputChange(rectId, 'x', parseInt(e.target.value))
-          }
-        />
-      </div>
-      <div>
-        <label>Y:</label>
-        <input
-          type="number"
-          value={rect.position.y}
-          onChange={(e) =>
-            handleInputChange(rectId, 'y', parseInt(e.target.value))
-          }
-        />
-      </div>
-      <div>
-        <label>Width:</label>
-        <input
-          type="number"
-          value={rect.size.width}
-          onChange={(e) =>
-            handleInputChange(rectId, 'width', parseInt(e.target.value))
-          }
-        />
-      </div>
-      <div>
-        <label>Height:</label>
-        <input
-          type="number"
-          value={rect.size.height}
-          onChange={(e) =>
-            handleInputChange(rectId, 'height', parseInt(e.target.value))
-          }
-        />
-      </div>
+      {renderInputField('X', rect.position.x, (value) =>
+        handleInputChange(rectId, 'x', value)
+      )}
+      {renderInputField('Y', rect.position.y, (value) =>
+        handleInputChange(rectId, 'y', value)
+      )}
+      {renderInputField('Width', rect.size.width, (value) =>
+        handleInputChange(rectId, 'width', value)
+      )}
+      {renderInputField('Height', rect.size.height, (value) =>
+        handleInputChange(rectId, 'height', value)
+      )}
     </div>
   )
 
