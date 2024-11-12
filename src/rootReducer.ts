@@ -1,4 +1,4 @@
-import { Action, UPDATE_RECT_POSITION } from './actions'
+import { Action, UPDATE_RECT_POSITION, UPDATE_RECT_DIMENSIONS } from './actions'
 import { RootState } from './types'
 
 const initialState: RootState = {
@@ -24,6 +24,15 @@ export const rootReducer = (
         [rectId]: {
           ...state[rectId],
           position,
+        },
+      }
+    case UPDATE_RECT_DIMENSIONS:
+      const { x, y, width, height } = action.payload
+      return {
+        ...state,
+        [action.payload.rectId]: {
+          position: { x, y },
+          size: { width, height },
         },
       }
     default:
