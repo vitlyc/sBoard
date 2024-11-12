@@ -68,7 +68,10 @@ const RectanglePanel: React.FC = () => {
   return (
     <div className="window rectangle-panels">
       <div className="title-bar">
-        <div className="title-bar-text">Rectangles</div>
+        <div className="title-bar-text">Panel</div>
+        <div className="title-bar-controls">
+          <button aria-label="Close" />
+        </div>
       </div>
       <div className="rectangle-panel">
         {renderInputFields('rect1', rect1)}

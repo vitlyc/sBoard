@@ -44,7 +44,6 @@ function App() {
     if (!context) return
 
     clearCanvas(canvasRef.current!)
-
     drawRects(context, [rect1, rect2])
 
     const linePoints = getConnectionLine(rect1, rect2)
@@ -60,11 +59,7 @@ function App() {
     context.stroke()
   }
 
-  const isPointInRect = (
-    x: number,
-    y: number,
-    rect: { position: Point; size: { width: number; height: number } }
-  ): boolean => {
+  const isPointInRect = (x: number, y: number, rect: any) => {
     return (
       x >= rect.position.x &&
       x <= rect.position.x + rect.size.width &&
@@ -73,48 +68,48 @@ function App() {
     )
   }
 
-  const areRectanglesOverlapping = (rect1: any, rect2: any): boolean => {
-    const rect1Right = rect1.position.x + rect1.size.width
-    const rect1Bottom = rect1.position.y + rect1.size.height
-    const rect2Right = rect2.position.x + rect2.size.width
-    const rect2Bottom = rect2.position.y + rect2.size.height
+  const handleTouchStart = (event: React.TouchEvent) => {
+    const canvas = canvasRef.current
+    if (!canvas) return
 
-    return !(
-      rect1Right < rect2.position.x ||
-      rect1.position.x > rect2Right ||
-      rect1Bottom < rect2.position.y ||
-      rect1.position.y > rect2Bottom
-    )
+    const rect = canvas.getBoundingClientRect()
+    const touch = event.touches[0]
+    const mouseX = touch.clientX - rect.left
+    const mouseY = touch.clientY - rect.top
+
+    if (isPointInRect(mouseX, mouseY, rect1)) {
+      setDraggingRect('rect1')
+      setOffset({ x: mouseX - rect1.position.x, y: mouseY - rect1.position.y })
+      setIsDragging(true)
+    } else if (isPointInRect(mouseX, mouseY, rect2)) {
+      setDraggingRect('rect2')
+      setOffset({ x: mouseX - rect2.position.x, y: mouseY - rect2.position.y })
+      setIsDragging(true)
+    }
   }
 
-  const handleMouseMove = (event: React.MouseEvent) => {
+  const handleTouchMove = (event: React.TouchEvent) => {
     if (!isDragging || !draggingRect) return
 
     const canvas = canvasRef.current
     if (!canvas) return
 
     const rect = canvas.getBoundingClientRect()
-    const mouseX = event.clientX - rect.left
-    const mouseY = event.clientY - rect.top
+    const touch = event.touches[0]
+    const mouseX = touch.clientX - rect.left
+    const mouseY = touch.clientY - rect.top
 
-    const currentRect = draggingRect === 'rect1' ? rect1 : rect2
-    const otherRect = draggingRect === 'rect1' ? rect2 : rect1
+    dispatch(
+      updateRectPosition(draggingRect, {
+        x: mouseX - offset.x,
+        y: mouseY - offset.y,
+      })
+    )
+  }
 
-    let newX = mouseX - offset.x
-    let newY = mouseY - offset.y
-
-    // Ограничиваем перемещение прямоугольника границами Canvas
-    newX = Math.max(0, Math.min(newX, WIDTH - currentRect.size.width))
-    newY = Math.max(0, Math.min(newY, HEIGHT - currentRect.size.height))
-
-    const newRect = { ...currentRect, position: { x: newX, y: newY } }
-
-    // Проверяем пересечение прямоугольников
-    if (areRectanglesOverlapping(newRect, otherRect)) {
-      return
-    }
-
-    dispatch(updateRectPosition(draggingRect, { x: newX, y: newY }))
+  const handleTouchEnd = () => {
+    setIsDragging(false)
+    setDraggingRect(null)
   }
 
   const handleMouseDown = (event: React.MouseEvent) => {
@@ -136,6 +131,24 @@ function App() {
     }
   }
 
+  const handleMouseMove = (event: React.MouseEvent) => {
+    if (!isDragging || !draggingRect) return
+
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const rect = canvas.getBoundingClientRect()
+    const mouseX = event.clientX - rect.left
+    const mouseY = event.clientY - rect.top
+
+    dispatch(
+      updateRectPosition(draggingRect, {
+        x: mouseX - offset.x,
+        y: mouseY - offset.y,
+      })
+    )
+  }
+
   const handleMouseUp = () => {
     setIsDragging(false)
     setDraggingRect(null)
@@ -143,6 +156,12 @@ function App() {
 
   return (
     <div className="window">
+      <div className="title-bar">
+        <div className="title-bar-text">Rectangles</div>
+        <div className="title-bar-controls">
+          <button aria-label="Close" />
+        </div>
+      </div>
       <RectanglePanel />
       <canvas
         ref={canvasRef}
