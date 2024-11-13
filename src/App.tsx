@@ -32,6 +32,7 @@ function App() {
     if (!canvas || !context) return
 
     setCanvasSize(canvas, WIDTH, HEIGHT)
+
     context.lineJoin = 'round'
     context.lineCap = 'round'
     context.lineWidth = 5
@@ -144,6 +145,8 @@ function App() {
       <div className="title-bar">
         <div className="title-bar-text">Rectangles</div>
         <div className="title-bar-controls">
+          <button aria-label="Minimize" />
+          <button aria-label="Maximize" />
           <button aria-label="Close" />
         </div>
       </div>

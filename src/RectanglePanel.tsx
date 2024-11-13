@@ -70,6 +70,8 @@ const RectanglePanel: React.FC = () => {
       <div className="title-bar">
         <div className="title-bar-text">Panel</div>
         <div className="title-bar-controls">
+          <button aria-label="Minimize" />
+          <button aria-label="Maximize" />
           <button aria-label="Close" />
         </div>
       </div>

@@ -1,41 +1,32 @@
+import { produce } from 'immer'
 import { Action, UPDATE_RECT_POSITION, UPDATE_RECT_DIMENSIONS } from './actions'
 import { RootState } from './types'
 
 const initialState: RootState = {
   rect1: {
     position: { x: 150, y: 150 },
-    size: { width: 80, height: 60 },
+    size: { width: 90, height: 90 },
   },
   rect2: {
     position: { x: 400, y: 300 },
-    size: { width: 100, height: 80 },
+    size: { width: 90, height: 100 },
   },
 }
 
-export const rootReducer = (
-  state: RootState = initialState,
-  action: Action
-): RootState => {
+export const rootReducer = produce((draft: RootState, action: Action) => {
   switch (action.type) {
-    case UPDATE_RECT_POSITION:
+    case UPDATE_RECT_POSITION: {
       const { rectId, position } = action.payload
-      return {
-        ...state,
-        [rectId]: {
-          ...state[rectId],
-          position,
-        },
-      }
-    case UPDATE_RECT_DIMENSIONS:
-      const { x, y, width, height } = action.payload
-      return {
-        ...state,
-        [action.payload.rectId]: {
-          position: { x, y },
-          size: { width, height },
-        },
-      }
+      draft[rectId].position = position
+      break
+    }
+    case UPDATE_RECT_DIMENSIONS: {
+      const { rectId, x, y, width, height } = action.payload
+      draft[rectId].position = { x, y }
+      draft[rectId].size = { width, height }
+      break
+    }
     default:
-      return state
+      break
   }
-}
+}, initialState)

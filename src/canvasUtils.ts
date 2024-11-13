@@ -2,6 +2,7 @@ import { Rect } from './types'
 
 export const drawRects = (context: CanvasRenderingContext2D, rects: Rect[]) => {
   context.fillStyle = '#ADD8E6'
+
   rects.forEach((rect) => {
     if (!rect) return
     context.fillRect(
